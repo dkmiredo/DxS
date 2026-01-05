@@ -19,56 +19,62 @@
             color: var(--text-gray);
             font-family: 'PingFang TC', sans-serif;
             margin: 0;
+            overflow: hidden; /* 禁止視窗捲動 */
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100vh;
         }
 
         #capture-area {
             background-color: var(--bg-beige);
-            padding: 50px 30px;
             width: 100%;
-            max-width: 850px;
+            max-width: 950px;
+            height: 100%; /* 填滿高度 */
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* 內容垂直居中 */
+            padding: 20px 40px;
+            box-sizing: border-box;
             position: relative;
         }
 
-        /* 標題區設計 */
+        /* 標題區：整體右移並優化排版 */
         header {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 40px;
-            margin-bottom: 50px;
-            text-align: left;
+            gap: 50px;
+            margin-bottom: 25px;
+            padding-left: 30px; /* 讓標題整體往右靠 */
+            width: 100%;
         }
 
         .header-left {
             font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             line-height: 1.1;
             color: #888;
             letter-spacing: 2px;
+            text-align: right;
         }
 
         .header-right {
-            position: relative;
             text-align: center;
         }
 
         .title-main {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: var(--dxs-blue);
-            margin-bottom: -15px;
+            margin-bottom: -12px;
             display: block;
         }
 
         .title-sub {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #888;
             letter-spacing: 5px;
             border-top: 1px solid #ccc;
@@ -80,30 +86,31 @@
             justify-content: space-between;
             width: 100%;
             position: relative;
-            gap: 120px; 
+            gap: 100px;
+            flex-grow: 1; /* 佔據剩餘空間 */
+            max-height: 550px; /* 限制最大高度，防止按鈕太散 */
         }
 
         .column {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            justify-content: space-around; /* 讓按鈕在範圍內均分 */
             z-index: 2;
         }
 
-        /* 按鈕高度固定為 60px */
         .card {
             background: var(--soft-white);
             border: 1px solid rgba(91, 124, 153, 0.15);
             border-radius: 12px;
-            padding: 0 20px;
+            padding: 0 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: 0.3s;
-            min-height: 60px; 
+            height: 60px; /* 固定高度 */
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
         }
@@ -111,16 +118,12 @@
         .card.selected { border-color: var(--dxs-blue); background: #E8EEF2; }
         .card.linked { background: var(--dxs-blue); color: white; border-color: var(--dxs-blue); }
 
-        /* 拿掉圓圈的試聽圖示 */
         .audio-link {
             color: var(--dxs-blue);
             text-decoration: none;
-            font-size: 20px; /* 稍微放大圖示 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease;
+            font-size: 18px;
             padding: 5px;
+            transition: 0.2s;
         }
         .linked .audio-link { color: white; }
         .audio-link:hover { transform: scale(1.2); }
@@ -133,26 +136,29 @@
             z-index: 1;
         }
 
+        /* 調整按鈕區間距 */
         .action-area {
-            margin: 40px 0 60px;
+            margin: 20px 0;
             display: flex;
             gap: 20px;
+            z-index: 10;
         }
 
         .btn {
-            padding: 12px 30px;
+            padding: 10px 25px;
             border-radius: 30px;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: 0.3s;
-            font-family: 'PingFang TC', sans-serif;
             font-weight: bold;
         }
 
         .btn-download { background: var(--dxs-blue); color: white; }
         .btn-reset { background: white; color: var(--dxs-blue); border: 1px solid var(--dxs-blue); }
-        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn:hover { opacity: 0.8; }
+
+        .credit { font-size: 10px; opacity: 0.4; margin-top: 10px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -207,12 +213,13 @@
                 <div class="card" onclick="handleSelect(this, 'right')">6. Prelude of love</div>
             </div>
         </div>
-        <p style="margin-top:40px; font-size:12px; opacity:0.4; letter-spacing: 2px;">💎 MATCHING BY CARAT 💎</p>
-    </div>
+        
+        <p class="credit">💎 MATCHING BY CARAT 💎</p>
 
-    <div class="action-area">
-        <button class="btn btn-reset" onclick="location.reload()">重整</button>
-        <button class="btn btn-download" onclick="downloadImage()">下載預測結果</button>
+        <div class="action-area">
+            <button class="btn btn-reset" onclick="location.reload()">重整</button>
+            <button class="btn btn-download" onclick="downloadImage()">下載預測結果</button>
+        </div>
     </div>
 
     <script>
@@ -221,7 +228,6 @@
 
         function handleSelect(el, side) {
             if (el.classList.contains('linked')) return;
-
             if (side === 'left') {
                 document.querySelectorAll('#left-col .card').forEach(c => c.classList.remove('selected'));
                 el.classList.add('selected');
@@ -244,23 +250,18 @@
             const canvas = document.getElementById('line-canvas');
             const ctx = canvas.getContext('2d');
             const container = document.getElementById('game-container');
-            
             canvas.width = container.offsetWidth;
             canvas.height = container.offsetHeight;
-            
             ctx.strokeStyle = "#5B7C99";
             ctx.lineWidth = 2;
-
             connections.forEach(conn => {
                 const rectLeft = conn.from.getBoundingClientRect();
                 const rectRight = conn.to.getBoundingClientRect();
                 const contRect = container.getBoundingClientRect();
-
                 const x1 = rectLeft.right - contRect.left;
                 const y1 = rectLeft.top + rectLeft.height / 2 - contRect.top;
                 const x2 = rectRight.left - contRect.left;
                 const y2 = rectRight.top + rectRight.height / 2 - contRect.top;
-
                 ctx.beginPath();
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
@@ -272,10 +273,7 @@
 
         function downloadImage() {
             const area = document.getElementById('capture-area');
-            html2canvas(area, {
-                backgroundColor: "#F2EDE4",
-                scale: 2 
-            }).then(canvas => {
+            html2canvas(area, { backgroundColor: "#F2EDE4", scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'DxS_Match_Results.png';
                 link.href = canvas.toDataURL('image/png');
