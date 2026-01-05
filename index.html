@@ -17,9 +17,9 @@
         body {
             background-color: var(--bg-beige);
             color: var(--text-gray);
-            font-family: 'PingFang TC', sans-serif;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             margin: 0;
-            overflow: hidden; /* 禁止視窗捲動 */
+            overflow: hidden; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -28,36 +28,35 @@
 
         #capture-area {
             background-color: var(--bg-beige);
-            width: 100%;
-            max-width: 950px;
-            height: 100%; /* 填滿高度 */
+            width: 950px; /* 固定寬度以確保截圖穩定 */
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* 內容垂直居中 */
-            padding: 20px 40px;
+            justify-content: center; 
+            padding: 40px;
             box-sizing: border-box;
             position: relative;
         }
 
-        /* 標題區：整體右移並優化排版 */
+        /* 標題區：結構優化確保不跑版 */
         header {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 50px;
-            margin-bottom: 25px;
-            padding-left: 30px; /* 讓標題整體往右靠 */
             width: 100%;
+            margin-bottom: 40px;
+            gap: 40px;
         }
 
         .header-left {
             font-family: 'Cinzel', serif;
             font-size: 1.6rem;
-            line-height: 1.1;
+            line-height: 1.2;
             color: #888;
             letter-spacing: 2px;
-            text-align: right;
+            text-align: left;
+            min-width: 200px; /* 確保文字空間 */
         }
 
         .header-right {
@@ -66,19 +65,20 @@
 
         .title-main {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: var(--dxs-blue);
-            margin-bottom: -12px;
+            margin-bottom: -10px;
             display: block;
         }
 
         .title-sub {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #888;
             letter-spacing: 5px;
             border-top: 1px solid #ccc;
-            padding-top: 5px;
+            padding-top: 8px;
+            display: inline-block;
         }
 
         .game-container {
@@ -86,16 +86,14 @@
             justify-content: space-between;
             width: 100%;
             position: relative;
-            gap: 100px;
-            flex-grow: 1; /* 佔據剩餘空間 */
-            max-height: 550px; /* 限制最大高度，防止按鈕太散 */
+            gap: 120px; /* 增加間距讓連線更明顯 */
         }
 
         .column {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-around; /* 讓按鈕在範圍內均分 */
+            gap: 15px; /* 改用固定間距防止跑版 */
             z-index: 2;
         }
 
@@ -103,16 +101,17 @@
             background: var(--soft-white);
             border: 1px solid rgba(91, 124, 153, 0.15);
             border-radius: 12px;
-            padding: 0 15px;
+            padding: 0 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             transition: 0.3s;
-            height: 60px; /* 固定高度 */
+            height: 60px; 
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            white-space: nowrap;
         }
 
         .card.selected { border-color: var(--dxs-blue); background: #E8EEF2; }
@@ -123,10 +122,10 @@
             text-decoration: none;
             font-size: 18px;
             padding: 5px;
-            transition: 0.2s;
+            display: flex;
+            align-items: center;
         }
         .linked .audio-link { color: white; }
-        .audio-link:hover { transform: scale(1.2); }
 
         #line-canvas {
             position: absolute;
@@ -136,29 +135,29 @@
             z-index: 1;
         }
 
-        /* 調整按鈕區間距 */
         .action-area {
-            margin: 20px 0;
+            margin-top: 40px;
             display: flex;
             gap: 20px;
             z-index: 10;
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 12px 35px;
             border-radius: 30px;
             border: none;
             cursor: pointer;
-            font-size: 0.95rem;
+            font-size: 1rem;
             transition: 0.3s;
             font-weight: bold;
+            font-family: 'PingFang TC', sans-serif;
         }
 
         .btn-download { background: var(--dxs-blue); color: white; }
         .btn-reset { background: white; color: var(--dxs-blue); border: 1px solid var(--dxs-blue); }
-        .btn:hover { opacity: 0.8; }
+        .btn:hover { opacity: 0.8; transform: translateY(-1px); }
 
-        .credit { font-size: 10px; opacity: 0.4; margin-top: 10px; letter-spacing: 2px; }
+        .credit { font-size: 11px; opacity: 0.4; margin-top: 20px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -273,7 +272,17 @@
 
         function downloadImage() {
             const area = document.getElementById('capture-area');
-            html2canvas(area, { backgroundColor: "#F2EDE4", scale: 2 }).then(canvas => {
+            // 截圖前強制重繪一次連線，確保位置精準
+            drawLines();
+            
+            html2canvas(area, { 
+                backgroundColor: "#F2EDE4", 
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                width: 950, // 鎖定截圖寬度
+                height: area.offsetHeight
+            }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'DxS_Match_Results.png';
                 link.href = canvas.toDataURL('image/png');
