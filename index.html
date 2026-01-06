@@ -17,58 +17,55 @@
         body {
             background-color: var(--bg-beige);
             color: var(--text-gray);
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            font-family: 'PingFang TC', sans-serif;
             margin: 0;
-            overflow: hidden; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         #capture-area {
             background-color: var(--bg-beige);
+            padding: 40px 15px;
             width: 100%;
-            max-width: 950px;
-            height: 100vh;
+            max-width: 450px; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; 
-            padding: 20px 40px;
-            box-sizing: border-box;
             position: relative;
+            box-sizing: border-box;
         }
 
+        /* 標題區置中 */
         header {
             display: flex;
+            flex-direction: column; 
             align-items: center;
             justify-content: center;
-            gap: 50px;
-            margin-bottom: 30px;
-            padding-left: 30px; 
+            gap: 15px;
+            margin-bottom: 40px;
+            text-align: center;
             width: 100%;
         }
 
         .header-left {
             font-family: 'Cinzel', serif;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             line-height: 1.1;
             color: #888;
             letter-spacing: 2px;
-            text-align: right;
-            min-width: 200px;
         }
 
         .header-right {
-            text-align: center;
+            position: relative;
         }
 
         .title-main {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
+            font-size: 2.4rem;
             color: var(--dxs-blue);
-            margin-bottom: -12px;
+            margin-bottom: -10px;
             display: block;
         }
 
@@ -76,7 +73,7 @@
             font-family: 'Noto Serif TC', serif;
             font-size: 1.1rem;
             color: #888;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             border-top: 1px solid #ccc;
             padding-top: 5px;
         }
@@ -86,33 +83,32 @@
             justify-content: space-between;
             width: 100%;
             position: relative;
-            gap: 120px; 
-            max-height: 500px;
+            gap: 30px; 
         }
 
         .column {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 12px; /* 固定間距避免截圖跑檔 */
+            gap: 12px;
             z-index: 2;
         }
 
         .card {
             background: var(--soft-white);
             border: 1px solid rgba(91, 124, 153, 0.15);
-            border-radius: 12px;
-            padding: 0 15px;
+            border-radius: 10px;
+            padding: 0 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: 0.3s;
-            height: 60px; 
+            min-height: 55px; 
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            white-space: nowrap; /* 確保截圖時文字不換行 */
+            word-break: break-word;
         }
 
         .card.selected { border-color: var(--dxs-blue); background: #E8EEF2; }
@@ -122,9 +118,9 @@
             color: var(--dxs-blue);
             text-decoration: none;
             font-size: 18px;
-            padding: 5px;
             display: flex;
             align-items: center;
+            padding: 5px;
         }
         .linked .audio-link { color: white; }
 
@@ -136,29 +132,36 @@
             z-index: 1;
         }
 
+        /* 下方按鈕置中 */
         .action-area {
-            margin: 25px 0;
+            margin: 30px 0 50px;
             display: flex;
-            gap: 20px;
-            z-index: 10;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 10px 20px;
             border-radius: 30px;
             border: none;
             cursor: pointer;
             font-size: 0.95rem;
             transition: 0.3s;
+            font-family: 'PingFang TC', sans-serif;
             font-weight: bold;
-            font-family: inherit;
         }
 
         .btn-download { background: var(--dxs-blue); color: white; }
         .btn-reset { background: white; color: var(--dxs-blue); border: 1px solid var(--dxs-blue); }
-        .btn:hover { opacity: 0.8; }
 
-        .credit { font-size: 10px; opacity: 0.4; margin-top: 10px; letter-spacing: 2px; }
+        .footer-credit {
+            margin-top: 30px;
+            font-size: 10px;
+            opacity: 0.4;
+            letter-spacing: 2px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -166,7 +169,7 @@
     <div id="capture-area">
         <header>
             <div class="header-left">
-                DXS 1ST MINI<br>ALBUM
+                DXS 1ST MINI ALBUM
             </div>
             <div class="header-right">
                 <span class="title-main">소야곡 Serenade</span>
@@ -179,47 +182,46 @@
             
             <div class="column" id="left-col">
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #1</span>
+                    <span>Track #1</span>
                     <a href="https://www.instagram.com/reel/DTAsgHIkrDg/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #2</span>
+                    <span>Track #2</span>
                     <a href="https://www.instagram.com/reel/DTAtJvbEtTG/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #3</span>
+                    <span>Track #3</span>
                     <a href="https://www.instagram.com/reel/DTAtsylkuNO/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #4</span>
+                    <span>Track #4</span>
                     <a href="https://www.instagram.com/reel/DTAuQl1kuEZ/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #5</span>
+                    <span>Track #5</span>
                     <a href="https://www.instagram.com/reel/DTAuzHREilX/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #6</span>
+                    <span>Track #6</span>
                     <a href="https://www.instagram.com/reel/DTAvdrCkpdY/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
             </div>
 
             <div class="column" id="right-col">
-                <div class="card" onclick="handleSelect(this, 'right')">1. Rockstar (🍕)</div>
-                <div class="card" onclick="handleSelect(this, 'right')">2. Blue (★)</div>
-                <div class="card" onclick="handleSelect(this, 'right')">3. Guilty Pleasure</div>
-                <div class="card" onclick="handleSelect(this, 'right')">4. Silence</div>
-                <div class="card" onclick="handleSelect(this, 'right')">5. Dream Serenade (🍊)</div>
-                <div class="card" onclick="handleSelect(this, 'right')">6. Prelude of love</div>
+                <div class="card" onclick="handleSelect(this, 'right')">1）Rockstar 🍕</div>
+                <div class="card" onclick="handleSelect(this, 'right')">2）Blue ★</div>
+                <div class="card" onclick="handleSelect(this, 'right')">3）Guilty Pleasure</div>
+                <div class="card" onclick="handleSelect(this, 'right')">4）Silence</div>
+                <div class="card" onclick="handleSelect(this, 'right')">5）Dream Serenade 🍊</div>
+                <div class="card" onclick="handleSelect(this, 'right')">6）Prelude of love</div>
             </div>
         </div>
-        
-        <p class="credit">💎 MATCHING BY CARAT 💎</p>
+        <p class="footer-credit">💎 MATCHING BY CARAT 💎</p>
+    </div>
 
-        <div class="action-area">
-            <button class="btn btn-reset" onclick="location.reload()">重整</button>
-            <button class="btn btn-download" onclick="downloadImage()">下載預測結果</button>
-        </div>
+    <div class="action-area">
+        <button class="btn btn-reset" onclick="location.reload()">重整</button>
+        <button class="btn btn-download" onclick="downloadImage()">下載圖片</button>
     </div>
 
     <script>
@@ -228,13 +230,14 @@
 
         function handleSelect(el, side) {
             if (el.classList.contains('linked')) return;
+
             if (side === 'left') {
                 document.querySelectorAll('#left-col .card').forEach(c => c.classList.remove('selected'));
                 el.classList.add('selected');
                 selectedLeft = el;
             } else {
                 if (!selectedLeft) {
-                    alert("請先選擇左側的 Track List！");
+                    alert("請先選擇左側！");
                     return;
                 }
                 connections.push({from: selectedLeft, to: el});
@@ -250,21 +253,23 @@
             const canvas = document.getElementById('line-canvas');
             const ctx = canvas.getContext('2d');
             const container = document.getElementById('game-container');
-            if (!container) return;
             
             canvas.width = container.offsetWidth;
             canvas.height = container.offsetHeight;
+            
             ctx.strokeStyle = "#5B7C99";
             ctx.lineWidth = 2;
-            
+
             connections.forEach(conn => {
                 const rectLeft = conn.from.getBoundingClientRect();
                 const rectRight = conn.to.getBoundingClientRect();
                 const contRect = container.getBoundingClientRect();
+
                 const x1 = rectLeft.right - contRect.left;
                 const y1 = rectLeft.top + rectLeft.height / 2 - contRect.top;
                 const x2 = rectRight.left - contRect.left;
                 const y2 = rectRight.top + rectRight.height / 2 - contRect.top;
+
                 ctx.beginPath();
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
@@ -276,19 +281,10 @@
 
         function downloadImage() {
             const area = document.getElementById('capture-area');
-            
-            // 下載前強制重繪 Canvas
-            drawLines();
-
-            html2canvas(area, { 
-                backgroundColor: "#F2EDE4", 
-                scale: 2,
-                logging: false,
-                width: 950, // 強制固定截圖寬度避免跑檔
-                onclone: (clonedDoc) => {
-                    // 在克隆出的畫布中微調排版以確保美觀
-                    clonedDoc.getElementById('capture-area').style.justifyContent = 'center';
-                }
+            html2canvas(area, {
+                backgroundColor: "#F2EDE4",
+                scale: 3, 
+                useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'DxS_Match_Results.png';
