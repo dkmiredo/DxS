@@ -29,7 +29,7 @@
             background-color: var(--bg-beige);
             padding: 40px 15px;
             width: 100%;
-            max-width: 450px; /* 手機顯示核心寬度 */
+            max-width: 450px; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -37,7 +37,7 @@
             box-sizing: border-box;
         }
 
-        /* 標題區：手機端改為垂直置中 */
+        /* 標題區置中 */
         header {
             display: flex;
             flex-direction: column; 
@@ -83,7 +83,7 @@
             justify-content: space-between;
             width: 100%;
             position: relative;
-            gap: 30px; /* 縮小手機端間距 */
+            gap: 30px; 
         }
 
         .column {
@@ -108,7 +108,7 @@
             min-height: 55px; 
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            word-break: break-word; /* 防止長文字溢出 */
+            word-break: break-word;
         }
 
         .card.selected { border-color: var(--dxs-blue); background: #E8EEF2; }
@@ -132,7 +132,7 @@
             z-index: 1;
         }
 
-        /* 按鈕區：水平置中 */
+        /* 下方按鈕置中 */
         .action-area {
             margin: 30px 0 50px;
             display: flex;
@@ -208,12 +208,12 @@
             </div>
 
             <div class="column" id="right-col">
-                <div class="card" onclick="handleSelect(this, 'right')">Rockstar 🍕</div>
-                <div class="card" onclick="handleSelect(this, 'right')">Blue ★</div>
-                <div class="card" onclick="handleSelect(this, 'right')">Guilty Pleasure</div>
-                <div class="card" onclick="handleSelect(this, 'right')">Silence</div>
-                <div class="card" onclick="handleSelect(this, 'right')">Dream Serenade 🍊</div>
-                <div class="card" onclick="handleSelect(this, 'right')">Prelude of love</div>
+                <div class="card" onclick="handleSelect(this, 'right')">1）Rockstar 🍕</div>
+                <div class="card" onclick="handleSelect(this, 'right')">2）Blue ★</div>
+                <div class="card" onclick="handleSelect(this, 'right')">3）Guilty Pleasure</div>
+                <div class="card" onclick="handleSelect(this, 'right')">4）Silence</div>
+                <div class="card" onclick="handleSelect(this, 'right')">5）Dream Serenade 🍊</div>
+                <div class="card" onclick="handleSelect(this, 'right')">6）Prelude of love</div>
             </div>
         </div>
         <p class="footer-credit">💎 MATCHING BY CARAT 💎</p>
@@ -283,7 +283,7 @@
             const area = document.getElementById('capture-area');
             html2canvas(area, {
                 backgroundColor: "#F2EDE4",
-                scale: 3, // 提高手機截圖清晰度
+                scale: 3, 
                 useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
