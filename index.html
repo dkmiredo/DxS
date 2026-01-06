@@ -17,7 +17,7 @@
         body {
             background-color: var(--bg-beige);
             color: var(--text-gray);
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            font-family: 'PingFang TC', sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -27,51 +27,53 @@
 
         #capture-area {
             background-color: var(--bg-beige);
-            padding: 50px 40px;
-            width: fit-content;
-            min-width: 900px; 
+            padding: 40px 15px;
+            width: 100%;
+            max-width: 450px; /* 手機顯示核心寬度 */
             display: flex;
             flex-direction: column;
-            align-items: center; /* 確保內部元素水平置中 */
+            align-items: center;
             position: relative;
+            box-sizing: border-box;
         }
 
-        /* 標題區：確保完全置中 */
+        /* 標題區：手機端改為垂直置中 */
         header {
             display: flex;
+            flex-direction: column; 
             align-items: center;
-            justify-content: center; /* 內容水平置中 */
-            gap: 40px;
-            margin-bottom: 50px;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            text-align: center;
             width: 100%;
         }
 
         .header-left {
             font-family: 'Cinzel', serif;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             line-height: 1.1;
             color: #888;
             letter-spacing: 2px;
-            text-align: right;
         }
 
         .header-right {
-            text-align: center;
+            position: relative;
         }
 
         .title-main {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             color: var(--dxs-blue);
-            margin-bottom: -15px;
+            margin-bottom: -10px;
             display: block;
         }
 
         .title-sub {
             font-family: 'Noto Serif TC', serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #888;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             border-top: 1px solid #ccc;
             padding-top: 5px;
         }
@@ -81,38 +83,32 @@
             justify-content: space-between;
             width: 100%;
             position: relative;
-            gap: 100px; 
+            gap: 30px; /* 縮小手機端間距 */
         }
 
         .column {
-            flex: 0 0 auto;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             z-index: 2;
-            min-width: 250px;
         }
 
         .card {
             background: var(--soft-white);
             border: 1px solid rgba(91, 124, 153, 0.15);
-            border-radius: 12px;
-            padding: 0 20px;
+            border-radius: 10px;
+            padding: 0 12px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             transition: 0.3s;
-            height: 60px; 
+            min-height: 55px; 
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            white-space: nowrap;
-        }
-
-        #right-col .card {
-            justify-content: flex-start;
-            padding-left: 25px;
+            word-break: break-word; /* 防止長文字溢出 */
         }
 
         .card.selected { border-color: var(--dxs-blue); background: #E8EEF2; }
@@ -121,10 +117,10 @@
         .audio-link {
             color: var(--dxs-blue);
             text-decoration: none;
-            font-size: 20px; 
+            font-size: 18px;
             display: flex;
             align-items: center;
-            padding-left: 10px;
+            padding: 5px;
         }
         .linked .audio-link { color: white; }
 
@@ -136,76 +132,45 @@
             z-index: 1;
         }
 
-        /* 按鈕區：確保完全置中 */
+        /* 按鈕區：水平置中 */
         .action-area {
-            margin: 40px 0 60px;
+            margin: 30px 0 50px;
             display: flex;
-            justify-content: center; /* 按鈕水平置中 */
-            gap: 20px;
+            justify-content: center;
+            gap: 15px;
             width: 100%;
         }
 
         .btn {
-            padding: 12px 35px;
+            padding: 10px 20px;
             border-radius: 30px;
             border: none;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: 0.3s;
+            font-family: 'PingFang TC', sans-serif;
             font-weight: bold;
-            font-family: inherit;
         }
 
         .btn-download { background: var(--dxs-blue); color: white; }
         .btn-reset { background: white; color: var(--dxs-blue); border: 1px solid var(--dxs-blue); }
-        .btn:hover { opacity: 0.8; transform: translateY(-2px); }
 
-        /* 預覽彈窗樣式 */
-        #preview-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        .footer-credit {
+            margin-top: 30px;
+            font-size: 10px;
+            opacity: 0.4;
+            letter-spacing: 2px;
+            text-align: center;
         }
-
-        .modal-content {
-            background: var(--bg-beige);
-            padding: 15px;
-            border-radius: 15px;
-            max-width: 95%;
-            max-height: 75vh;
-            overflow: auto;
-        }
-
-        #preview-image {
-            display: block;
-            width: 100%;
-            height: auto;
-        }
-
-        .modal-controls {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            color: white;
-        }
-
-        .zoom-slider { width: 200px; }
     </style>
 </head>
 <body>
 
     <div id="capture-area">
         <header>
-            <div class="header-left">DXS 1ST MINI<br>ALBUM</div>
+            <div class="header-left">
+                DXS 1ST MINI ALBUM
+            </div>
             <div class="header-right">
                 <span class="title-main">소야곡 Serenade</span>
                 <div class="title-sub">DK X SEUNGKWAN</div>
@@ -217,60 +182,46 @@
             
             <div class="column" id="left-col">
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #1</span>
+                    <span>Track #1</span>
                     <a href="https://www.instagram.com/reel/DTAsgHIkrDg/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #2</span>
+                    <span>Track #2</span>
                     <a href="https://www.instagram.com/reel/DTAtJvbEtTG/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #3</span>
+                    <span>Track #3</span>
                     <a href="https://www.instagram.com/reel/DTAtsylkuNO/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #4</span>
+                    <span>Track #4</span>
                     <a href="https://www.instagram.com/reel/DTAuQl1kuEZ/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #5</span>
+                    <span>Track #5</span>
                     <a href="https://www.instagram.com/reel/DTAuzHREilX/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
                 <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track List #6</span>
+                    <span>Track #6</span>
                     <a href="https://www.instagram.com/reel/DTAvdrCkpdY/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
                 </div>
             </div>
 
             <div class="column" id="right-col">
-                <div class="card" onclick="handleSelect(this, 'right')">1. Rockstar (🍕)</div>
-                <div class="card" onclick="handleSelect(this, 'right')">2. Blue (★)</div>
-                <div class="card" onclick="handleSelect(this, 'right')">3. Guilty Pleasure</div>
-                <div class="card" onclick="handleSelect(this, 'right')">4. Silence</div>
-                <div class="card" onclick="handleSelect(this, 'right')">5. Dream Serenade (🍊)</div>
-                <div class="card" onclick="handleSelect(this, 'right')">6. Prelude of love</div>
+                <div class="card" onclick="handleSelect(this, 'right')">Rockstar 🍕</div>
+                <div class="card" onclick="handleSelect(this, 'right')">Blue ★</div>
+                <div class="card" onclick="handleSelect(this, 'right')">Guilty Pleasure</div>
+                <div class="card" onclick="handleSelect(this, 'right')">Silence</div>
+                <div class="card" onclick="handleSelect(this, 'right')">Dream Serenade 🍊</div>
+                <div class="card" onclick="handleSelect(this, 'right')">Prelude of love</div>
             </div>
         </div>
-        <p style="margin-top:40px; font-size:12px; opacity:0.4; letter-spacing: 2px;">💎 MATCHING BY CARAT 💎</p>
+        <p class="footer-credit">💎 MATCHING BY CARAT 💎</p>
     </div>
 
     <div class="action-area">
         <button class="btn btn-reset" onclick="location.reload()">重整</button>
-        <button class="btn btn-download" onclick="generatePreview()">下載預測結果</button>
-    </div>
-
-    <div id="preview-modal">
-        <div class="modal-content">
-            <img id="preview-image" src="">
-        </div>
-        <div class="modal-controls">
-            <label>調整縮放大小</label>
-            <input type="range" class="zoom-slider" min="50" max="150" value="100" oninput="adjustZoom(this.value)">
-            <div style="display:flex; gap:10px;">
-                <button class="btn btn-reset" onclick="closeModal()">取消</button>
-                <button class="btn btn-download" onclick="saveImage()">確認存檔</button>
-            </div>
-        </div>
+        <button class="btn btn-download" onclick="downloadImage()">下載圖片</button>
     </div>
 
     <script>
@@ -279,15 +230,21 @@
 
         function handleSelect(el, side) {
             if (el.classList.contains('linked')) return;
+
             if (side === 'left') {
                 document.querySelectorAll('#left-col .card').forEach(c => c.classList.remove('selected'));
                 el.classList.add('selected');
                 selectedLeft = el;
             } else {
-                if (!selectedLeft) { alert("請先選擇左側！"); return; }
+                if (!selectedLeft) {
+                    alert("請先選擇左側！");
+                    return;
+                }
                 connections.push({from: selectedLeft, to: el});
-                selectedLeft.classList.add('linked'); el.classList.add('linked');
-                selectedLeft.classList.remove('selected'); selectedLeft = null;
+                selectedLeft.classList.add('linked');
+                el.classList.add('linked');
+                selectedLeft.classList.remove('selected');
+                selectedLeft = null;
                 drawLines();
             }
         }
@@ -296,45 +253,44 @@
             const canvas = document.getElementById('line-canvas');
             const ctx = canvas.getContext('2d');
             const container = document.getElementById('game-container');
-            if (!container) return;
+            
             canvas.width = container.offsetWidth;
             canvas.height = container.offsetHeight;
-            ctx.strokeStyle = "#5B7C99"; ctx.lineWidth = 2;
+            
+            ctx.strokeStyle = "#5B7C99";
+            ctx.lineWidth = 2;
+
             connections.forEach(conn => {
-                const r1 = conn.from.getBoundingClientRect(); const r2 = conn.to.getBoundingClientRect();
-                const cr = container.getBoundingClientRect();
+                const rectLeft = conn.from.getBoundingClientRect();
+                const rectRight = conn.to.getBoundingClientRect();
+                const contRect = container.getBoundingClientRect();
+
+                const x1 = rectLeft.right - contRect.left;
+                const y1 = rectLeft.top + rectLeft.height / 2 - contRect.top;
+                const x2 = rectRight.left - contRect.left;
+                const y2 = rectRight.top + rectRight.height / 2 - contRect.top;
+
                 ctx.beginPath();
-                ctx.moveTo(r1.right - cr.left, r1.top + r1.height/2 - cr.top);
-                ctx.lineTo(r2.left - cr.left, r2.top + r2.height/2 - cr.top);
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
                 ctx.stroke();
             });
         }
 
         window.addEventListener('resize', drawLines);
 
-        function generatePreview() {
+        function downloadImage() {
             const area = document.getElementById('capture-area');
-            drawLines();
             html2canvas(area, {
                 backgroundColor: "#F2EDE4",
-                scale: 2,
-                width: area.offsetWidth,
+                scale: 3, // 提高手機截圖清晰度
                 useCORS: true
             }).then(canvas => {
-                document.getElementById('preview-image').src = canvas.toDataURL('image/png');
-                document.getElementById('preview-modal').style.display = 'flex';
-                adjustZoom(100);
+                const link = document.createElement('a');
+                link.download = 'DxS_Match_Results.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
             });
-        }
-
-        function adjustZoom(v) { document.getElementById('preview-image').style.width = v + '%'; }
-        function closeModal() { document.getElementById('preview-modal').style.display = 'none'; }
-        function saveImage() {
-            const link = document.createElement('a');
-            link.download = 'DxS_Match.png';
-            link.href = document.getElementById('preview-image').src;
-            link.click();
-            closeModal();
         }
     </script>
 </body>
