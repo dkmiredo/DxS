@@ -2,9 +2,8 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DxS Tracklist Matching Game</title>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DxS Tracklist Ranking</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Dancing+Script:wght@500&family=Noto+Serif+TC:wght@300&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,151 +13,100 @@
             --text-gray: #555555;
         }
 
+        /* 讓整個 body 像是一張固定比例的卡片背景 */
         body {
             background-color: var(--bg-beige);
             color: var(--text-gray);
-            font-family: 'PingFang TC', sans-serif;
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            align-items: flex-start; /* 從頂部開始排版 */
             min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: pan-y;
         }
 
-        #capture-area {
+        #main-container {
             background-color: var(--bg-beige);
-            padding: 40px 15px;
+            padding: 50px 25px;
             width: 100%;
-            max-width: 450px; 
+            max-width: 450px; /* 固定手機呈現的最佳寬度 */
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
-            box-sizing: border-box;
         }
 
-        /* 標題區置中 */
         header {
             display: flex;
-            flex-direction: column; 
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 40px;
-            text-align: center;
+            gap: 20px;
             width: 100%;
         }
 
         .header-left {
-            font-family: 'Cinzel', serif;
-            font-size: 1.4rem;
-            line-height: 1.1;
-            color: #888;
-            letter-spacing: 2px;
+            font-family: 'Cinzel', serif; font-size: 1.2rem; line-height: 1.1; color: #888; text-align: right;
         }
 
-        .header-right {
-            position: relative;
-        }
-
-        .title-main {
+        .header-right { text-align: center; }
+        .title-main { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--dxs-blue); margin-bottom: -10px; display: block; }
+        .title-sub { font-family: 'Noto Serif TC', serif; font-size: 0.95rem; color: #888; letter-spacing: 3px; border-top: 1px solid #ccc; padding-top: 5px; }
+        
+        .title-question {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.4rem;
-            color: var(--dxs-blue);
-            margin-bottom: -10px;
-            display: block;
-        }
-
-        .title-sub {
-            font-family: 'Noto Serif TC', serif;
             font-size: 1.1rem;
-            color: #888;
-            letter-spacing: 4px;
-            border-top: 1px solid #ccc;
-            padding-top: 5px;
-        }
-
-        .game-container {
-            display: flex;
-            justify-content: space-between;
+            color: var(--dxs-blue);
+            opacity: 0.8;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 30px;
             width: 100%;
-            position: relative;
-            gap: 30px; 
         }
 
         .column {
-            flex: 1;
+            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            z-index: 2;
+            position: relative;
         }
 
         .card {
             background: var(--soft-white);
             border: 1px solid rgba(91, 124, 153, 0.15);
-            border-radius: 10px;
-            padding: 0 12px;
-            cursor: pointer;
+            border-radius: 12px;
+            padding: 0 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            transition: 0.3s;
-            min-height: 55px; 
+            justify-content: center;
+            font-size: 1rem;
+            min-height: 60px; /* 稍微增加高度，讓手機點擊更舒服 */
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            word-break: break-word;
-        }
-
-        .card.selected { border-color: var(--dxs-blue); background: #E8EEF2; }
-        .card.linked { background: var(--dxs-blue); color: white; border-color: var(--dxs-blue); }
-
-        .audio-link {
-            color: var(--dxs-blue);
-            text-decoration: none;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            padding: 5px;
-        }
-        .linked .audio-link { color: white; }
-
-        #line-canvas {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
+            text-align: center;
+            position: relative;
             z-index: 1;
+            touch-action: none;
+            transition: transform 0.1s linear, box-shadow 0.2s;
         }
 
-        /* 下方按鈕置中 */
-        .action-area {
-            margin: 30px 0 50px;
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            width: 100%;
+        /* 拖曳中的拼圖效果 */
+        .card.dragging {
+            z-index: 10;
+            background: #E8EEF2;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            opacity: 0.95;
+            transform: scale(1.03);
         }
 
-        .btn {
-            padding: 10px 20px;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.95rem;
-            transition: 0.3s;
-            font-family: 'PingFang TC', sans-serif;
-            font-weight: bold;
-        }
-
-        .btn-download { background: var(--dxs-blue); color: white; }
-        .btn-reset { background: white; color: var(--dxs-blue); border: 1px solid var(--dxs-blue); }
-
-        .footer-credit {
-            margin-top: 30px;
-            font-size: 10px;
-            opacity: 0.4;
+        .footer-text { 
+            margin-top: 50px; 
+            font-size: 11px; 
+            opacity: 0.4; 
             letter-spacing: 2px;
             text-align: center;
         }
@@ -166,132 +114,101 @@
 </head>
 <body>
 
-    <div id="capture-area">
+    <div id="main-container">
         <header>
-            <div class="header-left">
-                DXS 1ST MINI ALBUM
-            </div>
+            <div class="header-left">DXS 1ST<br>ALBUM</div>
             <div class="header-right">
                 <span class="title-main">소야곡 Serenade</span>
                 <div class="title-sub">DK X SEUNGKWAN</div>
             </div>
         </header>
 
-        <div class="game-container" id="game-container">
-            <canvas id="line-canvas"></canvas>
-            
-            <div class="column" id="left-col">
-                <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track #1</span>
-                    <a href="https://www.instagram.com/reel/DTAsgHIkrDg/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
-                </div>
-                <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track #2</span>
-                    <a href="https://www.instagram.com/reel/DTAtJvbEtTG/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
-                </div>
-                <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track #3</span>
-                    <a href="https://www.instagram.com/reel/DTAtsylkuNO/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
-                </div>
-                <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track #4</span>
-                    <a href="https://www.instagram.com/reel/DTAuQl1kuEZ/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
-                </div>
-                <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track #5</span>
-                    <a href="https://www.instagram.com/reel/DTAuzHREilX/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
-                </div>
-                <div class="card" onclick="handleSelect(this, 'left')">
-                    <span>Track #6</span>
-                    <a href="https://www.instagram.com/reel/DTAvdrCkpdY/" target="_blank" class="audio-link" onclick="event.stopPropagation()">▶</a>
-                </div>
-            </div>
+        <div class="title-question">what's your favorite?</div>
 
-            <div class="column" id="right-col">
-                <div class="card" onclick="handleSelect(this, 'right')">1）Rockstar 🍕</div>
-                <div class="card" onclick="handleSelect(this, 'right')">2）Blue ★</div>
-                <div class="card" onclick="handleSelect(this, 'right')">3）Guilty Pleasure</div>
-                <div class="card" onclick="handleSelect(this, 'right')">4）Silence</div>
-                <div class="card" onclick="handleSelect(this, 'right')">5）Dream Serenade 🍊</div>
-                <div class="card" onclick="handleSelect(this, 'right')">6）Prelude of love</div>
-            </div>
+        <div class="column" id="sortable-list">
+            <div class="card">1 ）prelude of love</div>
+            <div class="card">2 ）rockstar 🍕</div>
+            <div class="card">3 ）guilty pleasure</div>
+            <div class="card">4 ）blue</div>
+            <div class="card">5 ）silence</div>
+            <div class="card">6 ）dream serenade 🍊</div>
         </div>
-        <p class="footer-credit">💎 MATCHING BY CARAT 💎</p>
-    </div>
 
-    <div class="action-area">
-        <button class="btn btn-reset" onclick="location.reload()">重整</button>
-        <button class="btn btn-download" onclick="downloadImage()">下載圖片</button>
+        <p class="footer-text">💎 RANKING BY CARAT 💎</p>
     </div>
 
     <script>
-        let selectedLeft = null;
-        let connections = [];
+        const list = document.getElementById('sortable-list');
+        let draggingElement = null;
 
-        function handleSelect(el, side) {
-            if (el.classList.contains('linked')) return;
+        function initSortable() {
+            const cards = document.querySelectorAll('.card');
 
-            if (side === 'left') {
-                document.querySelectorAll('#left-col .card').forEach(c => c.classList.remove('selected'));
-                el.classList.add('selected');
-                selectedLeft = el;
+            cards.forEach(card => {
+                // 觸控開始
+                card.addEventListener('touchstart', (e) => {
+                    draggingElement = card;
+                    card.classList.add('dragging');
+                }, {passive: true});
+
+                // 觸控移動邏輯
+                card.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    if (targetElement && targetElement.classList.contains('card') && targetElement !== draggingElement) {
+                        const rect = targetElement.getBoundingClientRect();
+                        const next = (touch.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+                        list.insertBefore(draggingElement, next ? targetElement.nextSibling : targetElement);
+                    }
+                }, {passive: false});
+
+                // 觸控結束
+                card.addEventListener('touchend', () => {
+                    if(draggingElement) draggingElement.classList.remove('dragging');
+                    draggingElement = null;
+                });
+
+                // 滑鼠拖曳支援 (桌機)
+                card.setAttribute('draggable', 'true');
+            });
+        }
+
+        // 桌機版 Drag & Drop
+        list.addEventListener('dragstart', (e) => {
+            e.target.classList.add('dragging');
+            draggingElement = e.target;
+        });
+
+        list.addEventListener('dragend', (e) => {
+            e.target.classList.remove('dragging');
+        });
+
+        list.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(list, e.clientY);
+            if (afterElement == null) {
+                list.appendChild(draggingElement);
             } else {
-                if (!selectedLeft) {
-                    alert("請先選擇左側！");
-                    return;
-                }
-                connections.push({from: selectedLeft, to: el});
-                selectedLeft.classList.add('linked');
-                el.classList.add('linked');
-                selectedLeft.classList.remove('selected');
-                selectedLeft = null;
-                drawLines();
+                list.insertBefore(draggingElement, afterElement);
             }
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        function drawLines() {
-            const canvas = document.getElementById('line-canvas');
-            const ctx = canvas.getContext('2d');
-            const container = document.getElementById('game-container');
-            
-            canvas.width = container.offsetWidth;
-            canvas.height = container.offsetHeight;
-            
-            ctx.strokeStyle = "#5B7C99";
-            ctx.lineWidth = 2;
-
-            connections.forEach(conn => {
-                const rectLeft = conn.from.getBoundingClientRect();
-                const rectRight = conn.to.getBoundingClientRect();
-                const contRect = container.getBoundingClientRect();
-
-                const x1 = rectLeft.right - contRect.left;
-                const y1 = rectLeft.top + rectLeft.height / 2 - contRect.top;
-                const x2 = rectRight.left - contRect.left;
-                const y2 = rectRight.top + rectRight.height / 2 - contRect.top;
-
-                ctx.beginPath();
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.stroke();
-            });
-        }
-
-        window.addEventListener('resize', drawLines);
-
-        function downloadImage() {
-            const area = document.getElementById('capture-area');
-            html2canvas(area, {
-                backgroundColor: "#F2EDE4",
-                scale: 3, 
-                useCORS: true
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'DxS_Match_Results.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        }
+        initSortable();
     </script>
 </body>
 </html>
