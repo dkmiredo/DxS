@@ -42,7 +42,6 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
-            margin-bottom: 35px;
             width: 100%;
         }
 
@@ -52,15 +51,19 @@
 
         .header-right { text-align: center; }
         .title-main { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--dxs-blue); margin-bottom: -10px; display: block; }
-        .title-sub { font-family: 'Noto Serif TC', serif; font-size: 0.95rem; color: #888; letter-spacing: 3px; border-top: 1px solid #ccc; padding-top: 5px; margin-bottom: 2px; }
+        .title-sub { font-family: 'Noto Serif TC', serif; font-size: 0.95rem; color: #888; letter-spacing: 3px; border-top: 1px solid #ccc; padding-top: 5px; }
         
-        /* 新增的小字樣式 */
+        /* 核心修改：精確控制小字的上下間距，使其離標題與按鈕等距 */
         .title-question {
             font-family: 'Dancing Script', cursive;
             font-size: 1.1rem;
             color: var(--dxs-blue);
             opacity: 0.8;
             letter-spacing: 1px;
+            text-align: center;
+            margin-top: 25px;    /* 離標題的距離 */
+            margin-bottom: 25px; /* 離按鈕的距離 */
+            width: 100%;
         }
 
         .column {
@@ -123,9 +126,10 @@
             <div class="header-right">
                 <span class="title-main">소야곡 Serenade</span>
                 <div class="title-sub">DK X SEUNGKWAN</div>
-                <div class="title-question">what's your favorite?</div>
             </div>
         </header>
+
+        <div class="title-question">what's your favorite?</div>
 
         <div class="column" id="sortable-list">
             <div class="card">1 ）prelude of love</div>
@@ -225,7 +229,7 @@
                 link.download = 'DxS_Ranking.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                btn.innerText = "下載";
+                btn.innerText = "下載預測";
             });
         }
 
