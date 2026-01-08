@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DxS Tracklist Ranking</title>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Dancing+Script:wght@500&family=Noto+Serif+TC:wght@300&display=swap" rel="stylesheet">
@@ -23,21 +23,20 @@
             flex-direction: column;
             align-items: center;
             overflow-x: hidden;
+            touch-action: pan-y; /* 允許垂直捲動但防止縮放干擾 */
         }
 
-        /* 針對手機優化的擷取區域 */
         #capture-area {
             background-color: var(--bg-beige);
             padding: 40px 20px;
             width: 100%;
-            max-width: 450px; /* 手機寬度標準 */
+            max-width: 450px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        /* 標題區縮小以符合手機比例 */
         header {
             display: flex;
             align-items: center;
@@ -48,40 +47,19 @@
         }
 
         .header-left {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            line-height: 1.1;
-            color: #888;
-            letter-spacing: 1px;
-            text-align: right;
+            font-family: 'Cinzel', serif; font-size: 1.2rem; line-height: 1.1; color: #888; text-align: right;
         }
 
-        .header-right {
-            text-align: center;
-        }
-
-        .title-main {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.2rem;
-            color: var(--dxs-blue);
-            margin-bottom: -10px;
-            display: block;
-        }
-
-        .title-sub {
-            font-family: 'Noto Serif TC', serif;
-            font-size: 1rem;
-            color: #888;
-            letter-spacing: 3px;
-            border-top: 1px solid #ccc;
-            padding-top: 5px;
-        }
+        .header-right { text-align: center; }
+        .title-main { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--dxs-blue); margin-bottom: -10px; display: block; }
+        .title-sub { font-family: 'Noto Serif TC', serif; font-size: 1rem; color: #888; letter-spacing: 3px; border-top: 1px solid #ccc; padding-top: 5px; }
 
         .column {
             width: 100%;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            position: relative;
         }
 
         .card {
@@ -89,24 +67,27 @@
             border: 1px solid rgba(91, 124, 153, 0.15);
             border-radius: 12px;
             padding: 0 20px;
-            cursor: grab;
             display: flex;
             align-items: center;
-            justify-content: center; /* 文字置中 */
+            justify-content: center;
             font-size: 1rem;
             min-height: 55px; 
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            transition: transform 0.2s;
-            user-select: none; /* 防止手機長按選取文字 */
             text-align: center;
+            position: relative;
+            z-index: 1;
+            touch-action: none; /* 重要：防止拖動時頁面跟著捲動 */
+            transition: transform 0.1s linear, box-shadow 0.2s;
         }
 
-        .card:active { cursor: grabbing; }
-        .card.dragging { 
-            opacity: 0.5; 
-            transform: scale(0.98); 
+        /* 正在移動中的拼圖樣式 */
+        .card.dragging {
+            z-index: 10;
             background: #E8EEF2;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            opacity: 0.9;
+            transform: scale(1.02);
         }
 
         .action-area {
@@ -118,27 +99,12 @@
         }
 
         .btn {
-            flex: 1;
-            max-width: 150px;
-            padding: 12px 0;
-            border-radius: 30px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.3s;
-            font-weight: bold;
-            text-align: center;
+            flex: 1; max-width: 150px; padding: 12px 0; border-radius: 30px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: bold; text-align: center; transition: 0.3s;
         }
-
         .btn-download { background: var(--dxs-blue); color: white; }
         .btn-reset { background: white; color: var(--dxs-blue); border: 1px solid var(--dxs-blue); }
         
-        .footer-text {
-            margin-top: 30px;
-            font-size: 10px;
-            opacity: 0.4;
-            letter-spacing: 2px;
-        }
+        .footer-text { margin-top: 30px; font-size: 10px; opacity: 0.4; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -153,12 +119,12 @@
         </header>
 
         <div class="column" id="sortable-list">
-            <div class="card" draggable="true">1 ）prelude of love</div>
-            <div class="card" draggable="true">2 ）rockstar 🍕</div>
-            <div class="card" draggable="true">3 ）guilty pleasure</div>
-            <div class="card" draggable="true">4 ）blue</div>
-            <div class="card" draggable="true">5 ）silence</div>
-            <div class="card" draggable="true">6 ）dream serenade 🍊</div>
+            <div class="card">1 ）prelude of love</div>
+            <div class="card">2 ）rockstar 🍕</div>
+            <div class="card">3 ）guilty pleasure</div>
+            <div class="card">4 ）blue</div>
+            <div class="card">5 ）silence</div>
+            <div class="card">6 ）dream serenade 🍊</div>
         </div>
 
         <p class="footer-text">💎 RANKING BY CARAT 💎</p>
@@ -166,33 +132,65 @@
 
     <div class="action-area">
         <button class="btn btn-reset" onclick="location.reload()">重置排序</button>
-        <button class="btn btn-download" onclick="downloadImage()">下載</button>
+        <button class="btn btn-download" onclick="downloadImage()">下載預測</button>
     </div>
 
     <script>
-        // 拖曳排序邏輯 (支援滑鼠與觸控基礎)
         const list = document.getElementById('sortable-list');
-        
+        let draggingElement = null;
+
+        // 手機與桌機通用排序邏輯
+        function initSortable() {
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                // 處理觸控開始
+                card.addEventListener('touchstart', (e) => {
+                    draggingElement = card;
+                    card.classList.add('dragging');
+                }, {passive: true});
+
+                // 處理觸控移動
+                card.addEventListener('touchmove', (e) => {
+                    e.preventDefault(); // 防止捲動
+                    const touch = e.touches[0];
+                    const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+                    
+                    if (targetElement && targetElement.classList.contains('card') && targetElement !== draggingElement) {
+                        const rect = targetElement.getBoundingClientRect();
+                        const next = (touch.clientY - rect.top) / (rect.bottom - rect.top) > 0.5;
+                        list.insertBefore(draggingElement, next ? targetElement.nextSibling : targetElement);
+                    }
+                }, {passive: false});
+
+                // 處理觸控結束
+                card.addEventListener('touchend', () => {
+                    draggingElement.classList.remove('dragging');
+                    draggingElement = null;
+                });
+
+                // 相容桌機滑鼠拖動
+                card.setAttribute('draggable', 'true');
+            });
+        }
+
+        // 桌機版 Drag & Drop 輔助
         list.addEventListener('dragstart', (e) => {
-            if (e.target.classList.contains('card')) {
-                e.target.classList.add('dragging');
-            }
+            e.target.classList.add('dragging');
+            draggingElement = e.target;
         });
 
         list.addEventListener('dragend', (e) => {
-            if (e.target.classList.contains('card')) {
-                e.target.classList.remove('dragging');
-            }
+            e.target.classList.remove('dragging');
         });
 
         list.addEventListener('dragover', (e) => {
             e.preventDefault();
-            const draggingItem = document.querySelector('.dragging');
             const afterElement = getDragAfterElement(list, e.clientY);
             if (afterElement == null) {
-                list.appendChild(draggingItem);
+                list.appendChild(draggingElement);
             } else {
-                list.insertBefore(draggingItem, afterElement);
+                list.insertBefore(draggingElement, afterElement);
             }
         });
 
@@ -209,25 +207,26 @@
             }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
 
-        // 下載圖片邏輯
         function downloadImage() {
             const area = document.getElementById('capture-area');
-            const btnDownload = document.querySelector('.btn-download');
-            btnDownload.innerText = "產生中...";
+            const btn = document.querySelector('.btn-download');
+            btn.innerText = "產生中...";
 
             html2canvas(area, {
                 backgroundColor: "#F2EDE4",
-                scale: 3, // 提高解析度讓手機分享更清晰
+                scale: 3,
                 logging: false,
                 useCORS: true
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'DxS_Ranking_Results.png';
+                link.download = 'DxS_Ranking.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                btnDownload.innerText = "下載預測";
+                btn.innerText = "下載預測";
             });
         }
+
+        initSortable();
     </script>
 </body>
 </html>
