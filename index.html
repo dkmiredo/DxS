@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DxS Tracklist Ranking</title>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Dancing+Script:wght@500&family=Noto+Serif+TC:wght@300&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,23 +13,26 @@
             --text-gray: #555555;
         }
 
+        /* 讓整個 body 像是一張固定比例的卡片背景 */
         body {
             background-color: var(--bg-beige);
             color: var(--text-gray);
             font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
             margin: 0;
+            padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            align-items: flex-start; /* 從頂部開始排版 */
+            min-height: 100vh;
             overflow-x: hidden;
             touch-action: pan-y;
         }
 
-        #capture-area {
+        #main-container {
             background-color: var(--bg-beige);
-            padding: 40px 20px;
+            padding: 50px 25px;
             width: 100%;
-            max-width: 450px;
+            max-width: 450px; /* 固定手機呈現的最佳寬度 */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -53,7 +55,6 @@
         .title-main { font-family: 'Dancing Script', cursive; font-size: 2.2rem; color: var(--dxs-blue); margin-bottom: -10px; display: block; }
         .title-sub { font-family: 'Noto Serif TC', serif; font-size: 0.95rem; color: #888; letter-spacing: 3px; border-top: 1px solid #ccc; padding-top: 5px; }
         
-        /* 核心修改：精確控制小字的上下間距，使其離標題與按鈕等距 */
         .title-question {
             font-family: 'Dancing Script', cursive;
             font-size: 1.1rem;
@@ -61,8 +62,8 @@
             opacity: 0.8;
             letter-spacing: 1px;
             text-align: center;
-            margin-top: 25px;    /* 離標題的距離 */
-            margin-bottom: 25px; /* 離按鈕的距離 */
+            margin-top: 30px;
+            margin-bottom: 30px;
             width: 100%;
         }
 
@@ -83,7 +84,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1rem;
-            min-height: 55px; 
+            min-height: 60px; /* 稍微增加高度，讓手機點擊更舒服 */
             box-sizing: border-box;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
             text-align: center;
@@ -93,34 +94,27 @@
             transition: transform 0.1s linear, box-shadow 0.2s;
         }
 
+        /* 拖曳中的拼圖效果 */
         .card.dragging {
             z-index: 10;
             background: #E8EEF2;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            opacity: 0.9;
-            transform: scale(1.02);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            opacity: 0.95;
+            transform: scale(1.03);
         }
 
-        .action-area {
-            margin: 30px 0 50px;
-            display: flex;
-            gap: 15px;
-            width: 90%;
-            justify-content: center;
+        .footer-text { 
+            margin-top: 50px; 
+            font-size: 11px; 
+            opacity: 0.4; 
+            letter-spacing: 2px;
+            text-align: center;
         }
-
-        .btn {
-            flex: 1; max-width: 150px; padding: 12px 0; border-radius: 30px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: bold; text-align: center; transition: 0.3s;
-        }
-        .btn-download { background: var(--dxs-blue); color: white; }
-        .btn-reset { background: white; color: var(--dxs-blue); border: 1px solid var(--dxs-blue); }
-        
-        .footer-text { margin-top: 30px; font-size: 10px; opacity: 0.4; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div id="capture-area">
+    <div id="main-container">
         <header>
             <div class="header-left">DXS 1ST<br>ALBUM</div>
             <div class="header-right">
@@ -143,11 +137,6 @@
         <p class="footer-text">💎 RANKING BY CARAT 💎</p>
     </div>
 
-    <div class="action-area">
-        <button class="btn btn-reset" onclick="location.reload()">重置排序</button>
-        <button class="btn btn-download" onclick="downloadImage()">下載預測</button>
-    </div>
-
     <script>
         const list = document.getElementById('sortable-list');
         let draggingElement = null;
@@ -156,11 +145,13 @@
             const cards = document.querySelectorAll('.card');
 
             cards.forEach(card => {
+                // 觸控開始
                 card.addEventListener('touchstart', (e) => {
                     draggingElement = card;
                     card.classList.add('dragging');
                 }, {passive: true});
 
+                // 觸控移動邏輯
                 card.addEventListener('touchmove', (e) => {
                     e.preventDefault();
                     const touch = e.touches[0];
@@ -173,15 +164,18 @@
                     }
                 }, {passive: false});
 
+                // 觸控結束
                 card.addEventListener('touchend', () => {
                     if(draggingElement) draggingElement.classList.remove('dragging');
                     draggingElement = null;
                 });
 
+                // 滑鼠拖曳支援 (桌機)
                 card.setAttribute('draggable', 'true');
             });
         }
 
+        // 桌機版 Drag & Drop
         list.addEventListener('dragstart', (e) => {
             e.target.classList.add('dragging');
             draggingElement = e.target;
@@ -212,25 +206,6 @@
                     return closest;
                 }
             }, { offset: Number.NEGATIVE_INFINITY }).element;
-        }
-
-        function downloadImage() {
-            const area = document.getElementById('capture-area');
-            const btn = document.querySelector('.btn-download');
-            btn.innerText = "產生中...";
-
-            html2canvas(area, {
-                backgroundColor: "#F2EDE4",
-                scale: 3,
-                logging: false,
-                useCORS: true
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'DxS_Ranking.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                btn.innerText = "下載預測";
-            });
         }
 
         initSortable();
